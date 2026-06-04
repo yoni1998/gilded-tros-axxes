@@ -99,7 +99,7 @@ describe("GildedTrosTest", () => {
     });
   });
 
-  describe.each(["Duplicate code", "Long Methods", "Ugly Variable Names"])(
+  describe.each(["Duplicate Code", "Long Methods", "Ugly Variable Names"])(
     "smelly items",
     (name) => {
       it("Degrades quality twice as fast as normal items", () => {
