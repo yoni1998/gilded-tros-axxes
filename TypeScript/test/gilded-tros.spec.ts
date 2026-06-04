@@ -2,10 +2,10 @@ import { Item } from "../src/item";
 import { GildedTros } from "../src/gilded-tros";
 
 function updateItem(name: string, sellIn: number, quality: number) {
-  const items = new Item(name, sellIn, quality);
-  const app: GildedTros = new GildedTros([items]);
+  const item = new Item(name, sellIn, quality);
+  const app: GildedTros = new GildedTros([item]);
   app.updateQuality();
-  return items;
+  return item;
 }
 
 describe("GildedTrosTest", () => {
@@ -98,4 +98,16 @@ describe("GildedTrosTest", () => {
       expect(item.quality).toEqual(0);
     });
   });
+
+  describe.each(["Duplicate code", "Long Methods", "Ugly Variable Names"])(
+    "smelly items",
+    (name) => {
+      it("Degrades quality twice as fast as normal items", () => {
+        const item = updateItem(name, 10, 20);
+
+        expect(item.sellIn).toEqual(9);
+        expect(item.quality).toEqual(18);
+      });
+    },
+  );
 });
