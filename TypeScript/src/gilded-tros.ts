@@ -1,85 +1,78 @@
 import { Item } from "./item";
-
-const MAX_QUALITY = 50;
+import { decreaseQuality, increaseQuality } from "./utils/quality";
 
 export class GildedTros {
   constructor(public items: Array<Item>) {}
 
   public updateQuality(): void {
-    function increaseQuality(item: Item, amount: number): void {
-      item.quality = Math.min(MAX_QUALITY, item.quality + amount);
-    }
-
-    function decreaseQuality(item: Item, amount: number): void {
-      item.quality = Math.max(0, item.quality - amount);
-    }
-
     for (const item of this.items) {
-      if (
-        item.name != "Good Wine" &&
-        item.name != "Backstage passes for Re:Factor" &&
-        item.name != "Backstage passes for HAXX"
-      ) {
-        if (item.quality > 0) {
-          if (item.name != "B-DAWG Keychain") {
-            if (
-              item.name != "Duplicate Code" &&
-              item.name != "Long Methods" &&
-              item.name != "Ugly Variable Names"
-            ) {
-              decreaseQuality(item, 1);
-            } else {
-              decreaseQuality(item, 2);
-            }
-          }
-        }
-      } else {
-        if (item.quality < 50) {
-          increaseQuality(item, 1);
+      switch (item.name) {
+        case "Good Wine":
+          this.updateWineItem(item);
+          break;
 
-          if (
-            item.name == "Backstage passes for Re:Factor" ||
-            item.name == "Backstage passes for HAXX"
-          ) {
-            if (item.sellIn < 11) {
-              if (item.quality < 50) {
-                increaseQuality(item, 1);
-              }
-            }
+        case "Backstage passes for Re:Factor":
+        case "Backstage passes for HAXX":
+          this.updateBackstageItem(item);
+          break;
 
-            if (item.sellIn < 6) {
-              if (item.quality < 50) {
-                increaseQuality(item, 1);
-              }
-            }
-          }
-        }
+        case "Duplicate Code":
+        case "Long Methods":
+        case "Ugly Variable Names":
+          this.updateSmellyItem(item);
+          break;
+
+        case "B-DAWG Keychain":
+          this.updateLegendaryItem(item);
+          break;
+
+        default:
+          this.updateNormalItem(item);
       }
+    }
+  }
 
-      if (item.name != "B-DAWG Keychain") {
-        item.sellIn = item.sellIn - 1;
-      }
+  private updateWineItem(item: Item): void {
+    increaseQuality(item, 1);
+    item.sellIn--;
 
-      if (item.sellIn < 0) {
-        if (item.name != "Good Wine") {
-          if (
-            item.name != "Backstage passes for Re:Factor" &&
-            item.name != "Backstage passes for HAXX"
-          ) {
-            if (item.quality > 0) {
-              if (item.name != "B-DAWG Keychain") {
-                decreaseQuality(item, 1);
-              }
-            }
-          } else {
-            item.quality = item.quality - item.quality;
-          }
-        } else {
-          if (item.quality < 50) {
-            increaseQuality(item, 1);
-          }
-        }
-      }
+    if (item.sellIn < 0) {
+      increaseQuality(item, 1);
+    }
+  }
+
+  private updateBackstageItem(item: Item): void {
+    increaseQuality(item, 1);
+
+    if (item.sellIn < 11) increaseQuality(item, 1);
+    if (item.sellIn < 6) increaseQuality(item, 1);
+
+    item.sellIn--;
+
+    if (item.sellIn < 0) {
+      item.quality = 0;
+    }
+  }
+
+  private updateSmellyItem(item: Item): void {
+    decreaseQuality(item, 2);
+    item.sellIn--;
+
+    if (item.sellIn < 0) {
+      decreaseQuality(item, 2);
+    }
+  }
+
+  private updateLegendaryItem(_item: Item): void {
+    return;
+  }
+
+  private updateNormalItem(item: Item): void {
+    decreaseQuality(item, 1);
+    item.sellIn--;
+
+    if (item.sellIn < 0) {
+      decreaseQuality(item, 1);
     }
   }
 }
