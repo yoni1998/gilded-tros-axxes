@@ -108,6 +108,13 @@ describe("GildedTrosTest", () => {
         expect(item.sellIn).toEqual(9);
         expect(item.quality).toEqual(18);
       });
+
+      it("Degrades quality again twice as fast, once the sall by date has passed", () => {
+        const item = updateItem(name, 0, 10);
+
+        expect(item.sellIn).toEqual(-1);
+        expect(item.quality).toEqual(6);
+      });
     },
   );
 });
