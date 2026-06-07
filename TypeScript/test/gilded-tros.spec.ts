@@ -76,23 +76,26 @@ describe("GildedTrosTest", () => {
     });
   });
 
-  describe("Backstage passes", () => {
+  describe.each([
+    "Backstage passes for Re:Factor",
+    "Backstage passes for HAXX",
+  ])("backstage passes", (name) => {
     it("Increases quality by 2 when there are 10 days or less", () => {
-      const item = updateItem("Backstage passes for Re:Factor", 10, 10);
+      const item = updateItem(name, 10, 10);
 
       expect(item.sellIn).toEqual(9);
       expect(item.quality).toEqual(12);
     });
 
     it("Increases quality by 3 when there are 5 days or less", () => {
-      const item = updateItem("Backstage passes for Re:Factor", 5, 10);
+      const item = updateItem(name, 5, 10);
 
       expect(item.sellIn).toEqual(4);
       expect(item.quality).toEqual(13);
     });
 
     it("Drops quality to 0 after the conference", () => {
-      const item = updateItem("Backstage passes for Re:Factor", 0, 5);
+      const item = updateItem(name, 0, 5);
 
       expect(item.sellIn).toEqual(-1);
       expect(item.quality).toEqual(0);
